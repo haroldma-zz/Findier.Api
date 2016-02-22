@@ -28,6 +28,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Findier.Api.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +38,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Findier.Api.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -172,6 +176,7 @@
       <Link>SqlServerTypes\x86\SqlServerSpatial110.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\swagger-bearer.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="Web.config" />
     <Content Include="packages.config" />
@@ -180,10 +185,10 @@
     <Compile Include="App_Start\Modules\DtoProvidersModule.cs" />
     <Compile Include="App_Start\Modules\IdentityModule.cs" />
     <Compile Include="App_Start\Modules\ServiceModule.cs" />
-    <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Attributes\DateTimeNowDefaultValueAttribute.cs" />
     <Compile Include="Attributes\EfDefaultValueAttribute.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\FinboardsController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -204,36 +209,16 @@
     <Compile Include="Managers\AppRoleStore.cs" />
     <Compile Include="Managers\AppUserManager.cs" />
     <Compile Include="Managers\AppUserStore.cs" />
-    <Compile Include="Migrations\201602210114348_Initial.cs" />
-    <Compile Include="Migrations\201602210114348_Initial.Designer.cs">
-      <DependentUpon>201602210114348_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201602210140389_CreatePost.cs" />
-    <Compile Include="Migrations\201602210140389_CreatePost.Designer.cs">
-      <DependentUpon>201602210140389_CreatePost.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201602211349584_Update.cs" />
-    <Compile Include="Migrations\201602211349584_Update.Designer.cs">
-      <DependentUpon>201602211349584_Update.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201602212344530_Messaging.cs" />
-    <Compile Include="Migrations\201602212344530_Messaging.Designer.cs">
-      <DependentUpon>201602212344530_Messaging.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201602220015257_EnableMessaging.cs" />
-    <Compile Include="Migrations\201602220015257_EnableMessaging.Designer.cs">
-      <DependentUpon>201602220015257_EnableMessaging.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201602220045439_Threads.cs" />
-    <Compile Include="Migrations\201602220045439_Threads.Designer.cs">
-      <DependentUpon>201602220045439_Threads.cs</DependentUpon>
+    <Compile Include="Migrations\201602221948554_Initial.cs" />
+    <Compile Include="Migrations\201602221948554_Initial.Designer.cs">
+      <DependentUpon>201602221948554_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\AppSqlServerMigrationSqlGenerator.cs" />
     <Compile Include="Models\AppDbContext.cs" />
     <Compile Include="Enums\Country.cs" />
-    <Compile Include="Models\Binding\CommentBindingModel.cs" />
-    <Compile Include="Models\Binding\CreatePostBindingModel.cs" />
+    <Compile Include="Models\Binding\NewComment.cs" />
+    <Compile Include="Models\Binding\NewPost.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentVote.cs" />
     <Compile Include="Models\DataTransfer\DtoBase.cs" />
@@ -245,6 +230,9 @@
     <Compile Include="Models\DataTransfer\DtoPost.cs" />
     <Compile Include="Models\DataTransfer\DtoThread.cs" />
     <Compile Include="Models\DataTransfer\DtoThreadMessage.cs" />
+    <Compile Include="Responses\FindierPageData.cs" />
+    <Compile Include="Responses\FindierErrorResponse.cs" />
+    <Compile Include="Responses\TokenResponse.cs" />
     <Compile Include="Models\DbEntry.cs" />
     <Compile Include="Models\Finboard.cs" />
     <Compile Include="Models\Identity\AppUserClaim.cs" />
@@ -268,6 +256,7 @@
     <Compile Include="Services\DtoService.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Infrastructure\SwaggerHandleGeoLocation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Web.Debug.config">
@@ -278,23 +267,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201602210114348_Initial.resx">
-      <DependentUpon>201602210114348_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602210140389_CreatePost.resx">
-      <DependentUpon>201602210140389_CreatePost.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602211349584_Update.resx">
-      <DependentUpon>201602211349584_Update.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602212344530_Messaging.resx">
-      <DependentUpon>201602212344530_Messaging.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602220015257_EnableMessaging.resx">
-      <DependentUpon>201602220015257_EnableMessaging.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602220045439_Threads.resx">
-      <DependentUpon>201602220045439_Threads.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201602221948554_Initial.resx">
+      <DependentUpon>201602221948554_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

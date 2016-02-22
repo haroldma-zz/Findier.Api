@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Linq;
 using System.Reflection;
 using System.Web.Hosting;
 using System.Web.Http;
@@ -13,6 +14,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using SqlServerTypes;
+using Swashbuckle.Application;
 
 [assembly: OwinStartup(typeof (Startup))]
 
@@ -64,6 +66,19 @@ namespace Findier.Api
 
             // configure the bearer authentication
             app.UseOAuthBearerAuthentication(bearerOptions);
+
+            // Register swagger
+            config
+                .EnableSwagger(c =>
+                    {
+                        c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                        c.SingleApiVersion("v1", "Findier");
+                        c.DescribeAllEnumsAsStrings();
+                        c.IncludeXmlComments($@"{AppDomain.CurrentDomain.BaseDirectory}\bin\Findier.Api.XML");
+                        c.OperationFilter<SwaggerHandleGeoLocation>();
+                    })
+                .EnableSwaggerUi(
+                    c => { c.InjectJavaScript(typeof (Startup).Assembly, "Findier.Api.Resources.swagger-bearer.js"); });
 
             WebApiConfig.Register(config);
             app.UseWebApi(config);

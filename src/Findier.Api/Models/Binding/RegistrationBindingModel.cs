@@ -8,11 +8,11 @@ namespace Findier.Api.Models.Binding
         public string DisplayName { get; set; }
 
         [Required(ErrorMessage = "Please enter an email address.")]
-        [StringLength(254, ErrorMessage = "The {0} must be at least {2} characters long.")]
+        [MaxLength(254, ErrorMessage = "The {0} must be at least {2} characters long.")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [MinLength(6, ErrorMessage = "The {0} must be at least {2} characters long.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

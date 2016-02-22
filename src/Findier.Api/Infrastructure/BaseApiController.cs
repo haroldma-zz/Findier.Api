@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.Spatial;
+﻿using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -6,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Web.Http;
 using Findier.Api.Extensions;
+using Findier.Api.Responses;
 using Microsoft.AspNet.Identity;
 
 namespace Findier.Api.Infrastructure
@@ -16,9 +18,9 @@ namespace Findier.Api.Infrastructure
         private string _ipAddress;
         private AppClaimsUser _user;
 
-        public string ClientIpAddress => _ipAddress ?? (_ipAddress = Request.GetClientIpAddress());
+        protected string ClientIpAddress => _ipAddress ?? (_ipAddress = Request.GetClientIpAddress());
 
-        public DbGeography GeoLocation
+        protected DbGeography GeoLocation
         {
             get
             {
@@ -32,39 +34,48 @@ namespace Findier.Api.Infrastructure
             }
         }
 
-        public bool IsAuthenticated => base.User?.Identity?.IsAuthenticated ?? false;
+        protected bool IsAuthenticated => base.User?.Identity?.IsAuthenticated ?? false;
 
-        public new AppClaimsUser User => _user ?? (IsAuthenticated ? (_user = new AppClaimsUser(base.User)) : null);
+        protected new AppClaimsUser User => _user ?? (IsAuthenticated ? (_user = new AppClaimsUser(base.User)) : null);
 
-        public IHttpActionResult ApiBadRequest(string message)
+        protected IHttpActionResult ApiBadRequest(string message)
         {
-            return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest, new { Error = message }));
+            return
+                ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest,
+                    new FindierErrorResponse { Error = message }));
         }
 
-        public IHttpActionResult ApiBadRequestFromModelState()
+        protected IHttpActionResult ApiBadRequestFromModelState()
         {
             var error = ModelState.FirstOrDefault().Value?.Errors?.FirstOrDefault()?.ErrorMessage;
             return error == null ? BadRequest() : ApiBadRequest(error);
         }
 
-        public IHttpActionResult CreatedData(object data)
+        protected IHttpActionResult CreatedData<T>(T data)
         {
-            return ResponseMessage(Request.CreateResponse(HttpStatusCode.Created, new { Data = data }));
+            return
+                ResponseMessage(Request.CreateResponse(HttpStatusCode.Created,
+                    new FindierResponse<T> { Data = data }));
         }
 
-        public IHttpActionResult OkData(object data)
+        protected IHttpActionResult NoContent()
         {
-            return Ok(new { Data = data });
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent));
         }
 
-        public IHttpActionResult OkPageData(object data, bool hasNext)
+        protected IHttpActionResult OkData<T>(T data)
         {
-            return OkData(new { Results = data, HasNext = hasNext });
+            return Ok(new FindierResponse<T> { Data = data });
         }
 
-        public IHttpActionResult OkPageData(object data, bool hasNext, bool hasPrev)
+        protected IHttpActionResult OkPageData<T>(List<T> data, bool hasNext, bool hasPrev = false)
         {
-            return OkData(new { Results = data, HasNext = hasNext, HasPrev = hasPrev });
+            return OkData(new FindierPageData<T>
+            {
+                Results = data,
+                HasNext = hasNext,
+                HasPrev = hasPrev
+            });
         }
     }
 

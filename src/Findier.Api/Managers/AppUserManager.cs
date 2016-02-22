@@ -1,18 +1,19 @@
 using System;
-using System.Globalization;
 using System.Threading.Tasks;
+using Findier.Api.Infrastructure;
+using Findier.Api.Models.DataTransfer;
 using Findier.Api.Models.Identity;
+using Findier.Api.Responses;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
-using Newtonsoft.Json.Linq;
 
 namespace Findier.Api.Managers
 {
     public class AppUserManager : UserManager<User, int>
     {
-        private readonly OAuthAuthorizationServerOptions _oAuthServerOptions;
         private readonly OAuthBearerAuthenticationOptions _oAuthBearerOptions;
+        private readonly OAuthAuthorizationServerOptions _oAuthServerOptions;
 
         public AppUserManager(
             AppUserStore store,
@@ -31,7 +32,7 @@ namespace Findier.Api.Managers
             };
         }
 
-        public async Task<JObject> GenerateLocalAccessTokenResponseAsync(User user)
+        public async Task<TokenResponse> GenerateLocalAccessTokenResponseAsync(User user)
         {
             var tokenExpiration = _oAuthServerOptions.AccessTokenExpireTimeSpan;
 
@@ -46,12 +47,13 @@ namespace Findier.Api.Managers
 
             var accessToken = _oAuthBearerOptions.AccessTokenFormat.Protect(ticket);
 
-            var tokenResponse = new JObject(
-                new JProperty("access_token", accessToken),
-                new JProperty("token_type", "bearer"),
-                new JProperty("username", user.UserName),
-                new JProperty("expires_in", tokenExpiration.TotalSeconds.ToString(CultureInfo.InvariantCulture))
-                );
+            var tokenResponse = new TokenResponse
+            {
+                AccessToken = accessToken,
+                TokenType = "bearer",
+                Username = user.UserName,
+                ExpiresIn = (int)tokenExpiration.TotalSeconds
+            };
 
             return tokenResponse;
         }

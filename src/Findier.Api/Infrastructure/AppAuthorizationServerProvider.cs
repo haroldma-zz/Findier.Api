@@ -21,7 +21,7 @@ namespace Findier.Api.Infrastructure
             var user = await userManager.FindAsync(context.UserName, context.Password);
             if (user == null)
             {
-                context.SetError("The username or password is incorrect.");
+                context.SetError("The Username or password is incorrect.");
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace Findier.Api.Infrastructure
             var ticket = new AuthenticationTicket(identity,
                 new AuthenticationProperties(new Dictionary<string, string>
                 {
-                    { "username", user.UserName }
+                    { "Username", user.UserName }
                 }));
 
             context.Validated(ticket);

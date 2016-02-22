@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Findier.Api.Enums;
 using Findier.Api.Extensions;
 using Findier.Api.Infrastructure;
 using Findier.Api.Models;
 using Findier.Api.Models.DataTransfer;
+using Findier.Api.Responses;
 using Findier.Api.Services;
+using Swashbuckle.Swagger.Annotations;
 
 namespace Findier.Api.Controllers
 {
@@ -25,7 +29,16 @@ namespace Findier.Api.Controllers
             _dtoService = dtoService;
         }
 
+        /// <summary>
+        ///     Gets a feed of the country's finboards.
+        /// </summary>
+        /// <param name="country">The country.</param>
+        /// <param name="offset">The offset (paging).</param>
+        /// <param name="limit">The limit (paging).</param>
+        /// <returns></returns>
         [AllowAnonymous]
+        [Route("")]
+        [ResponseType(typeof (FindierResponse<FindierPageData<DtoFinboard>>))]
         public async Task<IHttpActionResult> Get(Country country, int offset = 0, int limit = 20)
         {
             offset = Math.Max(0, offset);
@@ -42,8 +55,17 @@ namespace Findier.Api.Controllers
             return OkPageData(await _dtoService.CreateListAsync<Finboard, DtoFinboard>(finboards), offset + limit < max);
         }
 
+        /// <summary>
+        ///     Gets a feed of posts of the specified finboard.
+        /// </summary>
+        /// <param name="id">The finboard id.</param>
+        /// <param name="offset">The offset (paging).</param>
+        /// <param name="limit">The limit (paging).</param>
+        /// <returns></returns>
         [AllowAnonymous]
         [Route("{id}/posts")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof (FindierResponse<FindierPageData<DtoPlainPost>>))]
+        [SwaggerResponse(HttpStatusCode.NotFound)]
         public async Task<IHttpActionResult> GetPosts(string id, int offset = 0, int limit = 20)
         {
             offset = Math.Max(0, offset);

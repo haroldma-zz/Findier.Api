@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Findier.Api.Extensions;
 using Findier.Api.Infrastructure;
 using Findier.Api.Managers;
@@ -10,6 +11,7 @@ using Findier.Api.Models;
 using Findier.Api.Models.Binding;
 using Findier.Api.Models.DataTransfer;
 using Findier.Api.Models.Identity;
+using Findier.Api.Responses;
 using Findier.Api.Services;
 using Microsoft.AspNet.Identity;
 
@@ -30,6 +32,7 @@ namespace Findier.Api.Controllers
         }
 
         [Route("me/threads/{id}/messages")]
+        [ResponseType(typeof (FindierResponse<FindierPageData<DtoThreadMessage>>))]
         public async Task<IHttpActionResult> GetThreadMessages(
             string id,
             string after = null,
@@ -53,7 +56,7 @@ namespace Findier.Api.Controllers
             {
                 return Unauthorized();
             }
-            
+
             var usingBefore = before != null;
             var messages = await _dbContext.Entry(thread)
                 .Collection(p => p.Messages)
@@ -87,6 +90,7 @@ namespace Findier.Api.Controllers
         }
 
         [Route("me/threads")]
+        [ResponseType(typeof (FindierResponse<FindierPageData<DtoThread>>))]
         public async Task<IHttpActionResult> GetThreads()
         {
             var threads = await _dbContext.PostThreads
@@ -97,10 +101,11 @@ namespace Findier.Api.Controllers
                 .Where(p => p.UserId == User.Id || p.Post.UserId == User.Id)
                 .ToListAsync();
 
-            return OkData(await _dtoService.CreateListAsync<PostThread, DtoThread>(threads));
+            return OkPageData(await _dtoService.CreateListAsync<PostThread, DtoThread>(threads), false);
         }
 
         [AllowAnonymous, Route("")]
+        [ResponseType(typeof (TokenResponse))]
         public async Task<IHttpActionResult> Post(RegistrationBindingModel model)
         {
             if (!ModelState.IsValid)
