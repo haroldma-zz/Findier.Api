@@ -17,7 +17,7 @@ namespace Findier.Api.Models.DataTransfer
     {
         public DtoBaseWithCreatedAt(DbEntry entry) : base(entry)
         {
-            CreatedAt = entry.CreatedAt;
+            CreatedAt = new DateTime(entry.CreatedAt.Ticks, DateTimeKind.Utc);
         }
 
         public DateTime CreatedAt { get; set; }
