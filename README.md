@@ -1,4 +1,4 @@
-# Findier.Api
+# Findier Web API
 The web api for Findier.
 
 ## Technologies
