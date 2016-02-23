@@ -164,7 +164,7 @@ namespace Findier.Api.Controllers
                 Text = newPost.Text,
                 IsNsfw = newPost.IsNsfw,
                 Type = newPost.Type,
-                Price = newPost.Price,
+                Price = Math.Max(newPost.Price, 0),
                 Slug = string.IsNullOrEmpty(slug) ? "_" : slug,
                 Location = GeoLocation
             };

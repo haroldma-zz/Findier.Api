@@ -176,6 +176,12 @@
       <Link>SqlServerTypes\x86\SqlServerSpatial110.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Migrations\201602231318194_RemoveAllowMessaging.resx">
+      <DependentUpon>201602231318194_RemoveAllowMessaging.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602231921058_ShorterTitle.resx">
+      <DependentUpon>201602231921058_ShorterTitle.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\swagger-bearer.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="Web.config" />
@@ -212,6 +218,14 @@
     <Compile Include="Migrations\201602221948554_Initial.cs" />
     <Compile Include="Migrations\201602221948554_Initial.Designer.cs">
       <DependentUpon>201602221948554_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602231318194_RemoveAllowMessaging.cs" />
+    <Compile Include="Migrations\201602231318194_RemoveAllowMessaging.Designer.cs">
+      <DependentUpon>201602231318194_RemoveAllowMessaging.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602231921058_ShorterTitle.cs" />
+    <Compile Include="Migrations\201602231921058_ShorterTitle.Designer.cs">
+      <DependentUpon>201602231921058_ShorterTitle.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\AppSqlServerMigrationSqlGenerator.cs" />

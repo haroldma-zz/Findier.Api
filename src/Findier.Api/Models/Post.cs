@@ -8,8 +8,6 @@ namespace Findier.Api.Models
 {
     public class Post : DbEntryEditable
     {
-        public bool AllowMessages { get; set; }
-
         public int FinboardId { get; set; }
 
         public bool IsArchived { get; set; }
@@ -27,7 +25,7 @@ namespace Findier.Api.Models
         [MaxLength(10000)]
         public string Text { get; set; }
 
-        [Required, MaxLength(300), MinLength(10)]
+        [Required, MaxLength(300), MinLength(5)]
         public string Title { get; set; }
 
         public PostType Type { get; set; }

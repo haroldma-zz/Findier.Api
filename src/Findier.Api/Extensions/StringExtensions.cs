@@ -9,11 +9,10 @@ namespace Findier.Api.Extensions
         ///     hand-tuned for speed, reflects performance refactoring contributed
         ///     by John Gietzen (user otac0n) - StackOverflow
         /// </summary>
-        public static string ToUrlSlug(this string title)
+        public static string ToUrlSlug(this string title, int maxLength = 45)
         {
             if (title == null) return null;
-
-            const int maxlen = 80;
+            
             var len = title.Length;
             var prevdash = false;
             var sb = new StringBuilder(len);
@@ -47,7 +46,7 @@ namespace Findier.Api.Extensions
                     sb.Append(c.RemapInternationalCharToAscii());
                     if (prevlen != sb.Length) prevdash = false;
                 }
-                if (i == maxlen) break;
+                if (i == maxLength-1) break;
             }
 
             return prevdash ? sb.ToString().Substring(0, sb.Length - 1) : sb.ToString();
