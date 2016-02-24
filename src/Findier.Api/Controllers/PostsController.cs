@@ -13,6 +13,7 @@ using Findier.Api.Models.Binding;
 using Findier.Api.Models.DataTransfer;
 using Findier.Api.Responses;
 using Findier.Api.Services;
+using Resources;
 using Swashbuckle.Swagger.Annotations;
 
 namespace Findier.Api.Controllers
@@ -51,7 +52,7 @@ namespace Findier.Api.Controllers
 
             if (post.UserId != User.Id)
             {
-                return ApiBadRequest("This post doesn't belong to you.");
+                return ApiBadRequest(ApiResources.CategoryArchived);
             }
 
             post.Text = null;
@@ -63,6 +64,7 @@ namespace Findier.Api.Controllers
             return Ok();
         }
 
+       
         /// <summary>
         ///     Deletes the user's post downvote.
         /// </summary>
@@ -182,17 +184,17 @@ namespace Findier.Api.Controllers
 
             if (category == null)
             {
-                return ApiBadRequest("Category doesn't exists.");
+                return ApiBadRequest(ApiResources.CategoryNotFound);
             }
             if (category.IsArchived)
             {
-                return ApiBadRequest("This category has been archived.");
+                return ApiBadRequest(ApiResources.CategoryArchived);
             }
 
             if (string.IsNullOrWhiteSpace(newPost.Email)
                 && string.IsNullOrWhiteSpace(newPost.PhoneNumber))
             {
-                return ApiBadRequest("Please enter at least one contact method.");
+                return ApiBadRequest(ApiResources.ContactMethodRequired);
             }
 
             var slug = newPost.Title.ToUrlSlug();
@@ -254,7 +256,7 @@ namespace Findier.Api.Controllers
             }
             if (post.IsArchived)
             {
-                return ApiBadRequest("This post has been archived.");
+                return ApiBadRequest(ApiResources.PostArchived);
             }
 
             var comment = new Comment
@@ -304,7 +306,7 @@ namespace Findier.Api.Controllers
 
             if (post.UserId != User.Id)
             {
-                return ApiBadRequest("This post doesn't belong to you.");
+                return ApiBadRequest(ApiResources.PostNoOwnership);
             }
 
             if (updatedPost.Text != null)
@@ -334,7 +336,7 @@ namespace Findier.Api.Controllers
                 }
                 else if (post.Price < 1)
                 {
-                    return ApiBadRequest("Please include a price.");
+                    return ApiBadRequest(ApiResources.PostIncludePrice);
                 }
             }
 
@@ -349,7 +351,7 @@ namespace Findier.Api.Controllers
                     if ((updatedPost.PhoneNumber != null && string.IsNullOrWhiteSpace(updatedPost.PhoneNumber))
                         || post.PhoneNumber == null)
                     {
-                        return ApiBadRequest("There must be at least one contact method.");
+                        return ApiBadRequest(ApiResources.ContactMethodRequired);
                     }
                     post.Email = null;
                 }
@@ -365,7 +367,7 @@ namespace Findier.Api.Controllers
                 {
                     if (post.Email == null)
                     {
-                        return ApiBadRequest("There must be at least one contact method.");
+                        return ApiBadRequest(ApiResources.ContactMethodRequired);
                     }
                     post.PhoneNumber = null;
                 }
@@ -430,7 +432,7 @@ namespace Findier.Api.Controllers
             }
             if (post.IsArchived)
             {
-                return ApiBadRequest("This post has been archived.");
+                return ApiBadRequest(ApiResources.PostArchived);
             }
 
             var userVote = await _dbContext.Entry(post)

@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -39,7 +40,10 @@ namespace Findier.Api.Controllers
         [AllowAnonymous]
         [Route("")]
         [ResponseType(typeof (FindierResponse<FindierPageData<DtoCategory>>))]
-        public async Task<IHttpActionResult> Get(Country country, int offset = 0, int limit = 20)
+        public async Task<IHttpActionResult> Get(
+            Country country,
+            int offset = 0,
+            int limit = 20)
         {
             offset = Math.Max(0, offset);
             limit = Math.Min(100, limit);

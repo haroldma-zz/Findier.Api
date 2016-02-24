@@ -176,15 +176,32 @@
       <Link>SqlServerTypes\x86\SqlServerSpatial110.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_GlobalResources\ApiResources.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>ApiResources.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
     <EmbeddedResource Include="Migrations\201602242005424_Initial.resx">
       <DependentUpon>201602242005424_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602242150130_CategoryTranslation.resx">
+      <DependentUpon>201602242150130_CategoryTranslation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\swagger-bearer.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="Web.config" />
     <Content Include="packages.config" />
+    <EmbeddedResource Include="App_GlobalResources\ApiResources.es.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApiResources.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_GlobalResources\ApiResources.designer.cs">
+      <DependentUpon>ApiResources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="App_Start\Modules\DtoProvidersModule.cs" />
     <Compile Include="App_Start\Modules\IdentityModule.cs" />
     <Compile Include="App_Start\Modules\ServiceModule.cs" />
@@ -202,6 +219,7 @@
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\GeoHelper.cs" />
+    <Compile Include="Helpers\LanguageHelper.cs" />
     <Compile Include="Infrastructure\AppAuthorizationServerProvider.cs" />
     <Compile Include="Infrastructure\AppConfigurations.cs" />
     <Compile Include="Infrastructure\AppIdentityDbContext.cs" />
@@ -217,6 +235,10 @@
     <Compile Include="Migrations\201602242005424_Initial.Designer.cs">
       <DependentUpon>201602242005424_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602242150130_CategoryTranslation.cs" />
+    <Compile Include="Migrations\201602242150130_CategoryTranslation.Designer.cs">
+      <DependentUpon>201602242150130_CategoryTranslation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\AppSqlServerMigrationSqlGenerator.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -224,6 +246,7 @@
     <Compile Include="Models\Binding\NewComment.cs" />
     <Compile Include="Models\Binding\NewPost.cs" />
     <Compile Include="Models\Binding\UpdatedPost.cs" />
+    <Compile Include="Models\CategoryTranslation.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentVote.cs" />
     <Compile Include="Models\DataTransfer\DtoBase.cs" />
@@ -256,6 +279,11 @@
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Infrastructure\SwaggerHandleGeoLocation.cs" />
+    <Compile Include="App_GlobalResources\ApiResources.es.Designer.cs">
+      <DependentUpon>ApiResources.es.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Web.Debug.config">

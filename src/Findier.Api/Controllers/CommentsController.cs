@@ -6,6 +6,7 @@ using Findier.Api.Extensions;
 using Findier.Api.Infrastructure;
 using Findier.Api.Models;
 using Findier.Api.Responses;
+using Resources;
 using Swashbuckle.Swagger.Annotations;
 
 namespace Findier.Api.Controllers
@@ -108,7 +109,7 @@ namespace Findier.Api.Controllers
             }
             if (comment.Post.IsArchived)
             {
-                return ApiBadRequest("This thread has been archived.");
+                return ApiBadRequest(ApiResources.PostArchived);
             }
 
             var userVote = await _dbContext.Entry(comment)

@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Autofac;
 using Autofac.Integration.Owin;
+using Findier.Api.Controllers;
 using Findier.Api.Managers;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
+using Resources;
 
 namespace Findier.Api.Infrastructure
 {
@@ -21,7 +25,7 @@ namespace Findier.Api.Infrastructure
             var user = await userManager.FindAsync(context.UserName, context.Password);
             if (user == null)
             {
-                context.SetError("The Username or password is incorrect.");
+                context.SetError(ApiResources.UsernamePasswordIncorrect);
                 return;
             }
 

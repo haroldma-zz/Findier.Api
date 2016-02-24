@@ -57,6 +57,8 @@ namespace Findier.Api
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
+            //app.Use(typeof (LanguageMiddleware));
+
             // Register Autofac middleware and then the Autofac web api middleware
             app.UseAutofacMiddleware(container);
             app.UseAutofacWebApi(config);

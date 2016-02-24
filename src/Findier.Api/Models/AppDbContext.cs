@@ -14,6 +14,8 @@ namespace Findier.Api.Models
 
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<CategoryTranslation> CategoryTranslations { get; set; }
+
         public DbSet<Comment> Comment { get; set; }
 
         public DbSet<CommentVote> CommentVotes { get; set; }
@@ -44,6 +46,10 @@ namespace Findier.Api.Models
 
             builder.Entity<Category>()
                 .HasMany(p => p.Posts)
+                .WithRequired(p => p.Category);
+
+            builder.Entity<Category>()
+                .HasMany(p => p.Translations)
                 .WithRequired(p => p.Category);
 
             builder.Entity<Post>()
