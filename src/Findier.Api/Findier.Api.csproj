@@ -248,6 +248,7 @@
     <Compile Include="Enums\Country.cs" />
     <Compile Include="Models\Binding\NewComment.cs" />
     <Compile Include="Models\Binding\NewPost.cs" />
+    <Compile Include="Models\Binding\UpdatedPost.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentVote.cs" />
     <Compile Include="Models\DataTransfer\DtoBase.cs" />

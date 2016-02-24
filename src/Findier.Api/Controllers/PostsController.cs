@@ -283,6 +283,100 @@ namespace Findier.Api.Controllers
         }
 
         /// <summary>
+        ///     Updates the specified post.
+        /// </summary>
+        /// <param name="id">The post id.</param>
+        /// <param name="updatedPost">The updated post.</param>
+        /// <returns></returns>
+        [Route("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK)]
+        [SwaggerResponse(HttpStatusCode.NotFound)]
+        [SwaggerResponse(HttpStatusCode.BadRequest, type: typeof (FindierErrorResponse))]
+        public async Task<IHttpActionResult> Put([FromUri] string id, [FromBody] UpdatedPost updatedPost)
+        {
+            var decodedId = id.FromEncodedId();
+            var post = await _dbContext.Posts.FindAsync(decodedId);
+
+            if (post == null || post.DeletedAt != null)
+            {
+                return NotFound();
+            }
+
+            if (post.UserId != User.Id)
+            {
+                return ApiBadRequest("This post doesn't belong to you.");
+            }
+
+            if (updatedPost.Text != null)
+            {
+                post.Text = updatedPost.Text;
+            }
+
+            if (updatedPost.Type != null)
+            {
+                post.Type = updatedPost.Type.Value;
+                if (post.Type != PostType.Fixed)
+                {
+                    post.Price = 0;
+                }
+            }
+
+            if (updatedPost.IsNsfw != null && !post.IsNsfw)
+            {
+                post.IsNsfw = updatedPost.IsNsfw.Value;
+            }
+
+            if (post.Type == PostType.Fixed)
+            {
+                if (updatedPost.Price != null)
+                {
+                    post.Price = Math.Max(updatedPost.Price.Value, 1);
+                }
+                else if (post.Price < 1)
+                {
+                    return ApiBadRequest("Please include a price.");
+                }
+            }
+
+            if (updatedPost.Email != null)
+            {
+                if (!string.IsNullOrWhiteSpace(post.Email))
+                {
+                    post.Email = updatedPost.Email;
+                }
+                else
+                {
+                    if ((updatedPost.PhoneNumber != null && string.IsNullOrWhiteSpace(updatedPost.PhoneNumber))
+                        || post.PhoneNumber == null)
+                    {
+                        return ApiBadRequest("There must be at least one contact method.");
+                    }
+                    post.Email = null;
+                }
+            }
+
+            if (updatedPost.PhoneNumber != null)
+            {
+                if (!string.IsNullOrWhiteSpace(post.PhoneNumber))
+                {
+                    post.PhoneNumber = updatedPost.PhoneNumber;
+                }
+                else
+                {
+                    if (post.Email == null)
+                    {
+                        return ApiBadRequest("There must be at least one contact method.");
+                    }
+                    post.PhoneNumber = null;
+                }
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        /// <summary>
         ///     Puts a downvote to the post.
         /// </summary>
         /// <param name="id">The post id.</param>
