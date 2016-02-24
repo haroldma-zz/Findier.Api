@@ -51,7 +51,8 @@ namespace Findier.Api.Controllers
             var max = await _dbContext.Categories.CountAsync();
             var categories = await _dbContext.Categories
                 .Where(p => p.Country == country)
-                .OrderByDescending(p => p.Posts.Count)
+                .OrderByDescending(p => p.Posts.Count(m => m.DeletedAt == null))
+                .ThenBy(p => p.Title)
                 .Skip(offset)
                 .Take(limit)
                 .ToListAsync();
