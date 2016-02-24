@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Findier.Api.Enums;
 using Findier.Api.Extensions;
 using Findier.Api.Infrastructure;
 using Findier.Api.Models;
@@ -155,6 +156,12 @@ namespace Findier.Api.Controllers
                 return ApiBadRequest("This finboard has been archived.");
             }
 
+            if (!newPost.CanMessage && string.IsNullOrWhiteSpace(newPost.Email)
+                && string.IsNullOrWhiteSpace(newPost.PhoneNumber))
+            {
+                return ApiBadRequest("Please enter at least one contact method.");
+            }
+
             var slug = newPost.Title.ToUrlSlug();
             var post = new Post
             {
@@ -164,9 +171,12 @@ namespace Findier.Api.Controllers
                 Text = newPost.Text,
                 IsNsfw = newPost.IsNsfw,
                 Type = newPost.Type,
-                Price = Math.Max(newPost.Price, 0),
+                Price = Math.Max(newPost.Price, newPost.Type == PostType.Fixed ? 1 : 0),
                 Slug = string.IsNullOrEmpty(slug) ? "_" : slug,
-                Location = GeoLocation
+                Location = GeoLocation,
+                CanMessage = newPost.CanMessage,
+                PhoneNumber = newPost.PhoneNumber,
+                Email = newPost.Email
             };
 
             _dbContext.Posts.Add(post);

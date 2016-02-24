@@ -182,6 +182,9 @@
     <EmbeddedResource Include="Migrations\201602231921058_ShorterTitle.resx">
       <DependentUpon>201602231921058_ShorterTitle.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602241243295_MultipleContactMethods.resx">
+      <DependentUpon>201602241243295_MultipleContactMethods.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\swagger-bearer.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="Web.config" />
@@ -226,6 +229,10 @@
     <Compile Include="Migrations\201602231921058_ShorterTitle.cs" />
     <Compile Include="Migrations\201602231921058_ShorterTitle.Designer.cs">
       <DependentUpon>201602231921058_ShorterTitle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602241243295_MultipleContactMethods.cs" />
+    <Compile Include="Migrations\201602241243295_MultipleContactMethods.Designer.cs">
+      <DependentUpon>201602241243295_MultipleContactMethods.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\AppSqlServerMigrationSqlGenerator.cs" />

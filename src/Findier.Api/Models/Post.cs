@@ -8,6 +8,11 @@ namespace Findier.Api.Models
 {
     public class Post : DbEntryEditable
     {
+        public bool CanMessage { get; set; }
+
+        [EmailAddress]
+        public string Email { get; set; }
+
         public int FinboardId { get; set; }
 
         public bool IsArchived { get; set; }
@@ -16,6 +21,9 @@ namespace Findier.Api.Models
 
         [Required]
         public DbGeography Location { get; set; }
+
+        [Phone]
+        public string PhoneNumber { get; set; }
 
         public decimal Price { get; set; }
 

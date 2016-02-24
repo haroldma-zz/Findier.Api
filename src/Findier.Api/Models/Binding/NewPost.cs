@@ -6,6 +6,18 @@ namespace Findier.Api.Models.Binding
     public class NewPost
     {
         /// <summary>
+        ///     Can other users message you in the app about the post.
+        /// </summary>
+        [Required]
+        public bool CanMessage { get; set; }
+
+        /// <summary>
+        ///     Email that users can use to contact you about the post.
+        /// </summary>
+        [EmailAddress]
+        public string Email { get; set; }
+
+        /// <summary>
         ///     The finboard id.
         /// </summary>
         [Required]
@@ -14,7 +26,14 @@ namespace Findier.Api.Models.Binding
         /// <summary>
         ///     Is the post targeting a nsfw audience?
         /// </summary>
+        [Required]
         public bool IsNsfw { get; set; }
+
+        /// <summary>
+        ///     Phone number that users can use to contact you about the post.
+        /// </summary>
+        [Phone]
+        public string PhoneNumber { get; set; }
 
         /// <summary>
         ///     The price, if the post is using the fixed type.
