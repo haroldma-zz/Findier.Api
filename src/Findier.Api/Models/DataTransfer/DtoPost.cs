@@ -17,6 +17,6 @@
 
         public string PhoneNumber { get; set; }
 
-        private bool CanMessage { get; set; }
+        public bool CanMessage { get; set; }
     }
 }
