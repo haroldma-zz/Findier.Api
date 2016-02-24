@@ -6,12 +6,6 @@ namespace Findier.Api.Models.Binding
     public class NewPost
     {
         /// <summary>
-        ///     Can other users message you in the app about the post.
-        /// </summary>
-        [Required]
-        public bool CanMessage { get; set; }
-
-        /// <summary>
         ///     Email that users can use to contact you about the post.
         /// </summary>
         [EmailAddress]

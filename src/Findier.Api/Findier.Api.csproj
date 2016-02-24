@@ -185,6 +185,9 @@
     <EmbeddedResource Include="Migrations\201602241243295_MultipleContactMethods.resx">
       <DependentUpon>201602241243295_MultipleContactMethods.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602241516028_RemoveMessenging.resx">
+      <DependentUpon>201602241516028_RemoveMessenging.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\swagger-bearer.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="Web.config" />
@@ -234,6 +237,10 @@
     <Compile Include="Migrations\201602241243295_MultipleContactMethods.Designer.cs">
       <DependentUpon>201602241243295_MultipleContactMethods.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602241516028_RemoveMessenging.cs" />
+    <Compile Include="Migrations\201602241516028_RemoveMessenging.Designer.cs">
+      <DependentUpon>201602241516028_RemoveMessenging.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\AppSqlServerMigrationSqlGenerator.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -249,8 +256,6 @@
     <Compile Include="Models\DataTransfer\DtoPlainFinboard.cs" />
     <Compile Include="Models\DataTransfer\DtoPlainPost.cs" />
     <Compile Include="Models\DataTransfer\DtoPost.cs" />
-    <Compile Include="Models\DataTransfer\DtoThread.cs" />
-    <Compile Include="Models\DataTransfer\DtoThreadMessage.cs" />
     <Compile Include="Responses\FindierPageData.cs" />
     <Compile Include="Responses\FindierErrorResponse.cs" />
     <Compile Include="Responses\TokenResponse.cs" />
@@ -262,8 +267,6 @@
     <Compile Include="Models\Identity\User.cs" />
     <Compile Include="Models\Identity\AppUserRole.cs" />
     <Compile Include="Models\Binding\RegistrationBindingModel.cs" />
-    <Compile Include="Models\PostThread.cs" />
-    <Compile Include="Models\ThreadMessage.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Enums\PostType.cs" />
     <Compile Include="Models\PostVote.cs" />
@@ -272,8 +275,6 @@
     <Compile Include="Providers\FinboardDtoProvider.cs" />
     <Compile Include="Providers\PlainPostDtoProvider.cs" />
     <Compile Include="Providers\PostDtoProvider.cs" />
-    <Compile Include="Providers\ThreadDtoProvider.cs" />
-    <Compile Include="Providers\ThreadMessageDtoProvider.cs" />
     <Compile Include="Services\DtoService.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />

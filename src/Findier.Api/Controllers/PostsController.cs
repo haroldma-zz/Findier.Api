@@ -156,7 +156,7 @@ namespace Findier.Api.Controllers
                 return ApiBadRequest("This finboard has been archived.");
             }
 
-            if (!newPost.CanMessage && string.IsNullOrWhiteSpace(newPost.Email)
+            if (string.IsNullOrWhiteSpace(newPost.Email)
                 && string.IsNullOrWhiteSpace(newPost.PhoneNumber))
             {
                 return ApiBadRequest("Please enter at least one contact method.");
@@ -174,7 +174,6 @@ namespace Findier.Api.Controllers
                 Price = Math.Max(newPost.Price, newPost.Type == PostType.Fixed ? 1 : 0),
                 Slug = string.IsNullOrEmpty(slug) ? "_" : slug,
                 Location = GeoLocation,
-                CanMessage = newPost.CanMessage,
                 PhoneNumber = newPost.PhoneNumber,
                 Email = newPost.Email
             };

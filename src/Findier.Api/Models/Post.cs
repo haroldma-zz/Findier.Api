@@ -8,8 +8,6 @@ namespace Findier.Api.Models
 {
     public class Post : DbEntryEditable
     {
-        public bool CanMessage { get; set; }
-
         [EmailAddress]
         public string Email { get; set; }
 
@@ -45,8 +43,6 @@ namespace Findier.Api.Models
         public virtual User User { get; set; }
 
         public virtual Finboard Finboard { get; set; }
-
-        public virtual ICollection<PostThread> Threads { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 

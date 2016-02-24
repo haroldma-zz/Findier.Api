@@ -20,24 +20,12 @@ namespace Findier.Api.Models
 
         public DbSet<Post> Posts { get; set; }
 
-        public DbSet<PostThread> PostThreads { get; set; }
-
         public DbSet<PostVote> PostVotes { get; set; }
-
-        public DbSet<ThreadMessage> ThreadMessages { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<User>()
-                .HasMany(p => p.SentMessages)
-                .WithRequired(p => p.User).WillCascadeOnDelete(false);
-
-            builder.Entity<User>()
-                .HasMany(p => p.StartedThreads)
-                .WithRequired(p => p.User).WillCascadeOnDelete(false);
-
+            
             builder.Entity<User>()
                 .HasMany(p => p.Finboards)
                 .WithRequired(p => p.User).WillCascadeOnDelete(false);
@@ -61,10 +49,6 @@ namespace Findier.Api.Models
             builder.Entity<Finboard>()
                 .HasMany(p => p.Posts)
                 .WithRequired(p => p.Finboard);
-
-            builder.Entity<Post>()
-                .HasMany(p => p.Threads)
-                .WithRequired(p => p.Post);
 
             builder.Entity<Post>()
                 .HasMany(p => p.Comments)

@@ -35,10 +35,6 @@ namespace Findier.Api.Models.Identity
 
         #region Navigational Properties
 
-        public virtual ICollection<ThreadMessage> SentMessages { get; set; }
-
-        public virtual ICollection<PostThread> StartedThreads { get; set; }
-
         public virtual ICollection<Finboard> Finboards { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
