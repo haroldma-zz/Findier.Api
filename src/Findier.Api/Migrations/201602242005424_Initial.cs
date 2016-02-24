@@ -8,6 +8,48 @@ namespace Findier.Api.Migrations
         public override void Up()
         {
             CreateTable(
+                "dbo.Categories",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Country = c.Int(nullable: false),
+                        Description = c.String(maxLength: 500),
+                        IsArchived = c.Boolean(nullable: false),
+                        IsNsfw = c.Boolean(nullable: false),
+                        Slug = c.String(nullable: false, maxLength: 45),
+                        Title = c.String(nullable: false, maxLength: 100),
+                        CreatedAt = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.Posts",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Email = c.String(),
+                        CategoryId = c.Int(nullable: false),
+                        IsArchived = c.Boolean(nullable: false),
+                        IsNsfw = c.Boolean(nullable: false),
+                        Location = c.Geography(nullable: false),
+                        PhoneNumber = c.String(),
+                        Price = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        Slug = c.String(nullable: false, maxLength: 45),
+                        Text = c.String(),
+                        Title = c.String(nullable: false, maxLength: 300),
+                        Type = c.Int(nullable: false),
+                        UserId = c.Int(nullable: false),
+                        EditedAt = c.DateTime(),
+                        DeletedAt = c.DateTime(),
+                        CreatedAt = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Users", t => t.UserId)
+                .ForeignKey("dbo.Categories", t => t.CategoryId, cascadeDelete: true)
+                .Index(t => t.CategoryId)
+                .Index(t => t.UserId);
+            
+            CreateTable(
                 "dbo.Comments",
                 c => new
                     {
@@ -20,55 +62,9 @@ namespace Findier.Api.Migrations
                         CreatedAt = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Users", t => t.UserId)
                 .ForeignKey("dbo.Posts", t => t.PostId, cascadeDelete: true)
-                .ForeignKey("dbo.Users", t => t.UserId)
                 .Index(t => t.PostId)
-                .Index(t => t.UserId);
-            
-            CreateTable(
-                "dbo.Posts",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        AllowMessages = c.Boolean(nullable: false),
-                        FinboardId = c.Int(nullable: false),
-                        IsArchived = c.Boolean(nullable: false),
-                        IsNsfw = c.Boolean(nullable: false),
-                        Location = c.Geography(nullable: false),
-                        Price = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Slug = c.String(nullable: false, maxLength: 45),
-                        Text = c.String(),
-                        Title = c.String(nullable: false, maxLength: 300),
-                        Type = c.Int(nullable: false),
-                        UserId = c.Int(nullable: false),
-                        EditedAt = c.DateTime(),
-                        DeletedAt = c.DateTime(),
-                        CreatedAt = c.DateTime(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Finboards", t => t.FinboardId, cascadeDelete: true)
-                .ForeignKey("dbo.Users", t => t.UserId)
-                .Index(t => t.FinboardId)
-                .Index(t => t.UserId);
-            
-            CreateTable(
-                "dbo.Finboards",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Country = c.Int(nullable: false),
-                        Description = c.String(maxLength: 500),
-                        IsArchived = c.Boolean(nullable: false),
-                        IsNsfw = c.Boolean(nullable: false),
-                        Slug = c.String(nullable: false, maxLength: 45),
-                        Title = c.String(nullable: false, maxLength: 100),
-                        UserId = c.Int(nullable: false),
-                        EditedAt = c.DateTime(),
-                        DeletedAt = c.DateTime(),
-                        CreatedAt = c.DateTime(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Users", t => t.UserId)
                 .Index(t => t.UserId);
             
             CreateTable(
@@ -172,40 +168,6 @@ namespace Findier.Api.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
-                "dbo.ThreadMessages",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        IsRead = c.Boolean(nullable: false),
-                        Text = c.String(nullable: false),
-                        ThreadId = c.Int(nullable: false),
-                        UserId = c.Int(nullable: false),
-                        CreatedAt = c.DateTime(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.PostThreads", t => t.ThreadId, cascadeDelete: true)
-                .ForeignKey("dbo.Users", t => t.UserId)
-                .Index(t => t.ThreadId)
-                .Index(t => t.UserId);
-            
-            CreateTable(
-                "dbo.PostThreads",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        IsPostUserDeleted = c.Boolean(nullable: false),
-                        IsUserDeleted = c.Boolean(nullable: false),
-                        PostId = c.Int(nullable: false),
-                        UserId = c.Int(nullable: false),
-                        CreatedAt = c.DateTime(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Users", t => t.UserId)
-                .ForeignKey("dbo.Posts", t => t.PostId, cascadeDelete: true)
-                .Index(t => t.PostId)
-                .Index(t => t.UserId);
-            
-            CreateTable(
                 "dbo.AppRoles",
                 c => new
                     {
@@ -220,27 +182,18 @@ namespace Findier.Api.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AppUserRoles", "RoleId", "dbo.AppRoles");
-            DropForeignKey("dbo.CommentVotes", "CommentId", "dbo.Comments");
+            DropForeignKey("dbo.Posts", "CategoryId", "dbo.Categories");
             DropForeignKey("dbo.PostVotes", "PostId", "dbo.Posts");
-            DropForeignKey("dbo.PostThreads", "PostId", "dbo.Posts");
-            DropForeignKey("dbo.PostThreads", "UserId", "dbo.Users");
-            DropForeignKey("dbo.ThreadMessages", "UserId", "dbo.Users");
-            DropForeignKey("dbo.ThreadMessages", "ThreadId", "dbo.PostThreads");
+            DropForeignKey("dbo.Comments", "PostId", "dbo.Posts");
+            DropForeignKey("dbo.CommentVotes", "CommentId", "dbo.Comments");
             DropForeignKey("dbo.AppUserRoles", "UserId", "dbo.Users");
             DropForeignKey("dbo.PostVotes", "UserId", "dbo.Users");
             DropForeignKey("dbo.Posts", "UserId", "dbo.Users");
             DropForeignKey("dbo.AppUserLogins", "UserId", "dbo.Users");
-            DropForeignKey("dbo.Finboards", "UserId", "dbo.Users");
             DropForeignKey("dbo.CommentVotes", "UserId", "dbo.Users");
             DropForeignKey("dbo.Comments", "UserId", "dbo.Users");
             DropForeignKey("dbo.AppUserClaims", "UserId", "dbo.Users");
-            DropForeignKey("dbo.Posts", "FinboardId", "dbo.Finboards");
-            DropForeignKey("dbo.Comments", "PostId", "dbo.Posts");
             DropIndex("dbo.AppRoles", "RoleNameIndex");
-            DropIndex("dbo.PostThreads", new[] { "UserId" });
-            DropIndex("dbo.PostThreads", new[] { "PostId" });
-            DropIndex("dbo.ThreadMessages", new[] { "UserId" });
-            DropIndex("dbo.ThreadMessages", new[] { "ThreadId" });
             DropIndex("dbo.AppUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AppUserRoles", new[] { "UserId" });
             DropIndex("dbo.PostVotes", new[] { "UserId" });
@@ -253,23 +206,20 @@ namespace Findier.Api.Migrations
             DropIndex("dbo.Users", new[] { "NormalizedUserName" });
             DropIndex("dbo.Users", new[] { "NormalizedEmail" });
             DropIndex("dbo.Users", new[] { "Email" });
-            DropIndex("dbo.Finboards", new[] { "UserId" });
-            DropIndex("dbo.Posts", new[] { "UserId" });
-            DropIndex("dbo.Posts", new[] { "FinboardId" });
             DropIndex("dbo.Comments", new[] { "UserId" });
             DropIndex("dbo.Comments", new[] { "PostId" });
+            DropIndex("dbo.Posts", new[] { "UserId" });
+            DropIndex("dbo.Posts", new[] { "CategoryId" });
             DropTable("dbo.AppRoles");
-            DropTable("dbo.PostThreads");
-            DropTable("dbo.ThreadMessages");
             DropTable("dbo.AppUserRoles");
             DropTable("dbo.PostVotes");
             DropTable("dbo.AppUserLogins");
             DropTable("dbo.CommentVotes");
             DropTable("dbo.AppUserClaims");
             DropTable("dbo.Users");
-            DropTable("dbo.Finboards");
-            DropTable("dbo.Posts");
             DropTable("dbo.Comments");
+            DropTable("dbo.Posts");
+            DropTable("dbo.Categories");
         }
     }
 }

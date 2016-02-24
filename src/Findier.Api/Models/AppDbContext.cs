@@ -12,11 +12,11 @@ namespace Findier.Api.Models
             Configuration.ProxyCreationEnabled = false;
         }
 
+        public DbSet<Category> Categories { get; set; }
+
         public DbSet<Comment> Comment { get; set; }
 
         public DbSet<CommentVote> CommentVotes { get; set; }
-
-        public DbSet<Finboard> Finboards { get; set; }
 
         public DbSet<Post> Posts { get; set; }
 
@@ -25,10 +25,6 @@ namespace Findier.Api.Models
         protected override void OnModelCreating(DbModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            
-            builder.Entity<User>()
-                .HasMany(p => p.Finboards)
-                .WithRequired(p => p.User).WillCascadeOnDelete(false);
 
             builder.Entity<User>()
                 .HasMany(p => p.Posts)
@@ -46,9 +42,9 @@ namespace Findier.Api.Models
                 .HasMany(p => p.CommentVotes)
                 .WithRequired(p => p.User).WillCascadeOnDelete(false);
 
-            builder.Entity<Finboard>()
+            builder.Entity<Category>()
                 .HasMany(p => p.Posts)
-                .WithRequired(p => p.Finboard);
+                .WithRequired(p => p.Category);
 
             builder.Entity<Post>()
                 .HasMany(p => p.Comments)

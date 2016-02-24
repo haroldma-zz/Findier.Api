@@ -158,7 +158,7 @@ namespace Findier.Api.Controllers
         }
 
         /// <summary>
-        ///     Create a new post in the specified finboard.
+        ///     Create a new post in the specified category.
         /// </summary>
         /// <param name="newPost">The new post.</param>
         /// <returns></returns>
@@ -176,17 +176,17 @@ namespace Findier.Api.Controllers
                 return ApiBadRequestFromModelState();
             }
 
-            var decodedId = newPost.FinboardId.FromEncodedId();
+            var decodedId = newPost.CategoryId.FromEncodedId();
 
-            var finboard = await _dbContext.Finboards.FirstOrDefaultAsync(p => p.Id == decodedId);
+            var category = await _dbContext.Categories.FirstOrDefaultAsync(p => p.Id == decodedId);
 
-            if (finboard == null || finboard.DeletedAt != null)
+            if (category == null)
             {
-                return ApiBadRequest("Finboard doesn't exists.");
+                return ApiBadRequest("Category doesn't exists.");
             }
-            if (finboard.IsArchived)
+            if (category.IsArchived)
             {
-                return ApiBadRequest("This finboard has been archived.");
+                return ApiBadRequest("This category has been archived.");
             }
 
             if (string.IsNullOrWhiteSpace(newPost.Email)
@@ -199,10 +199,10 @@ namespace Findier.Api.Controllers
             var post = new Post
             {
                 UserId = User.Id,
-                FinboardId = decodedId,
+                CategoryId = decodedId,
                 Title = newPost.Title,
                 Text = newPost.Text,
-                IsNsfw = newPost.IsNsfw,
+                IsNsfw = category.IsNsfw || newPost.IsNsfw,
                 Type = newPost.Type,
                 Price = Math.Max(newPost.Price, newPost.Type == PostType.Fixed ? 1 : 0),
                 Slug = string.IsNullOrEmpty(slug) ? "_" : slug,

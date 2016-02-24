@@ -30,6 +30,11 @@ namespace Findier.Api.Managers
                 AllowOnlyAlphanumericUserNames = true,
                 RequireUniqueEmail = true
             };
+            PasswordValidator = new PasswordValidator
+            {
+                RequiredLength = 6,
+                RequireDigit = true
+            };
         }
 
         public async Task<TokenResponse> GenerateLocalAccessTokenResponseAsync(User user)

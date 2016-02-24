@@ -33,7 +33,7 @@ namespace Findier.Api.Controllers
         
         [AllowAnonymous, Route("")]
         [ResponseType(typeof (TokenResponse))]
-        public async Task<IHttpActionResult> Post(RegistrationBindingModel model)
+        public async Task<IHttpActionResult> Post(NewUser newUser)
         {
             if (!ModelState.IsValid)
             {
@@ -42,13 +42,13 @@ namespace Findier.Api.Controllers
 
             var user = new User
             {
-                DisplayName = model.DisplayName,
-                Email = model.Email,
-                UserName = model.Username
+                DisplayName = newUser.DisplayName,
+                Email = newUser.Email,
+                UserName = newUser.Username
             };
 
             // Register using password
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, newUser.Password);
             var errorResult = GetErrorResult(result);
 
             return errorResult ?? Ok(await _userManager.GenerateLocalAccessTokenResponseAsync(user));

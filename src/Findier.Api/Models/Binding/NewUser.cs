@@ -2,7 +2,7 @@
 
 namespace Findier.Api.Models.Binding
 {
-    public class RegistrationBindingModel
+    public class NewUser
     {
         [Required, MaxLength(50)]
         public string DisplayName { get; set; }

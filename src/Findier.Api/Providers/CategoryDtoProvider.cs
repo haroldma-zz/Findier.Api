@@ -5,11 +5,11 @@ using Findier.Api.Models.DataTransfer;
 
 namespace Findier.Api.Providers
 {
-    public class FinboardDtoProvider : IDtoProvider<Finboard, DtoFinboard>
+    public class CategoryDtoProvider : IDtoProvider<Category, DtoCategory>
     {
-        public Task<DtoFinboard> CreateAsync(Finboard entry)
+        public Task<DtoCategory> CreateAsync(Category entry)
         {
-            return Task.FromResult(new DtoFinboard(entry));
+            return Task.FromResult(new DtoCategory(entry));
         }
     }
 }

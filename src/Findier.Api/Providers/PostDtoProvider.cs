@@ -19,7 +19,7 @@ namespace Findier.Api.Providers
 
         public async Task<DtoPost> CreateAsync(Post entry)
         {
-            string finboard;
+            string category;
             string username;
             int ups;
             int downs;
@@ -35,17 +35,17 @@ namespace Findier.Api.Providers
                 downs = entry.Votes.Count(p => !p.IsUp);
             }
 
-            if (entry.Finboard == null)
+            if (entry.Category == null)
             {
-                finboard = await _dbContext.Entry(entry)
-                    .Reference(p => p.Finboard)
+                category = await _dbContext.Entry(entry)
+                    .Reference(p => p.Category)
                     .Query()
                     .Select(p => p.Title)
                     .SingleAsync();
             }
             else
             {
-                finboard = entry.Finboard.Title;
+                category = entry.Category.Title;
             }
 
             if (entry.User == null)
@@ -61,7 +61,7 @@ namespace Findier.Api.Providers
                 username = entry.User.UserName;
             }
 
-            return new DtoPost(entry, username, ups, downs, new DtoPlainFinboard(entry.FinboardId.ToEncodedId(), finboard));
+            return new DtoPost(entry, username, ups, downs, new DtoPlainCategory(entry.CategoryId.ToEncodedId(), category));
         }
     }
 }

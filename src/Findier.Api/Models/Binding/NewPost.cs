@@ -12,10 +12,10 @@ namespace Findier.Api.Models.Binding
         public string Email { get; set; }
 
         /// <summary>
-        ///     The finboard id.
+        ///     The categori id.
         /// </summary>
         [Required]
-        public string FinboardId { get; set; }
+        public string CategoryId { get; set; }
 
         /// <summary>
         ///     Is the post targeting a nsfw audience?

@@ -17,20 +17,20 @@ using Swashbuckle.Swagger.Annotations;
 namespace Findier.Api.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/finboards")]
-    public class FinboardsController : BaseApiController
+    [RoutePrefix("api/categories")]
+    public class CategoriesController : BaseApiController
     {
         private readonly AppDbContext _dbContext;
         private readonly DtoService _dtoService;
 
-        public FinboardsController(AppDbContext dbContext, DtoService dtoService)
+        public CategoriesController(AppDbContext dbContext, DtoService dtoService)
         {
             _dbContext = dbContext;
             _dtoService = dtoService;
         }
 
         /// <summary>
-        ///     Gets a feed of the country's finboards.
+        ///     Gets a feed of the country's categories.
         /// </summary>
         /// <param name="country">The country.</param>
         /// <param name="offset">The offset (paging).</param>
@@ -38,27 +38,27 @@ namespace Findier.Api.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [Route("")]
-        [ResponseType(typeof (FindierResponse<FindierPageData<DtoFinboard>>))]
+        [ResponseType(typeof (FindierResponse<FindierPageData<DtoCategory>>))]
         public async Task<IHttpActionResult> Get(Country country, int offset = 0, int limit = 20)
         {
             offset = Math.Max(0, offset);
             limit = Math.Min(100, limit);
 
-            var max = await _dbContext.Finboards.CountAsync();
-            var finboards = await _dbContext.Finboards
+            var max = await _dbContext.Categories.CountAsync();
+            var categories = await _dbContext.Categories
                 .Where(p => p.Country == country)
-                .OrderBy(p => p.Id)
+                .OrderByDescending(p => p.Posts.Count)
                 .Skip(offset)
                 .Take(limit)
                 .ToListAsync();
 
-            return OkPageData(await _dtoService.CreateListAsync<Finboard, DtoFinboard>(finboards), offset + limit < max);
+            return OkPageData(await _dtoService.CreateListAsync<Category, DtoCategory>(categories), offset + limit < max);
         }
 
         /// <summary>
-        ///     Gets a feed of posts of the specified finboard.
+        ///     Gets a feed of posts of the specified categorie.
         /// </summary>
-        /// <param name="id">The finboard id.</param>
+        /// <param name="id">The categorie id.</param>
         /// <param name="offset">The offset (paging).</param>
         /// <param name="limit">The limit (paging).</param>
         /// <returns></returns>
@@ -73,20 +73,20 @@ namespace Findier.Api.Controllers
 
             var decodedId = id.FromEncodedId();
 
-            var finboard = await _dbContext.Finboards.FindAsync(decodedId);
+            var category = await _dbContext.Categories.FindAsync(decodedId);
 
-            if (finboard == null || finboard.DeletedAt != null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            var max = await _dbContext.Entry(finboard)
+            var max = await _dbContext.Entry(category)
                 .Collection(p => p.Posts)
                 .Query()
                 .ExcludeDeleted()
                 .CountAsync();
 
-            var posts = await _dbContext.Entry(finboard)
+            var posts = await _dbContext.Entry(category)
                 .Collection(p => p.Posts)
                 .Query()
                 .ExcludeDeleted()

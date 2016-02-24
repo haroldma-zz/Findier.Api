@@ -1,8 +1,8 @@
 ﻿namespace Findier.Api.Models.DataTransfer
 {
-    public class DtoFinboard : DtoBase
+    public class DtoCategory : DtoBase
     {
-        public DtoFinboard(Finboard entry) : base(entry)
+        public DtoCategory(Category entry) : base(entry)
         {
             Title = entry.Title;
             Description = entry.Description;

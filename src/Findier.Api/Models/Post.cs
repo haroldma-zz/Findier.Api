@@ -11,7 +11,7 @@ namespace Findier.Api.Models
         [EmailAddress]
         public string Email { get; set; }
 
-        public int FinboardId { get; set; }
+        public int CategoryId { get; set; }
 
         public bool IsArchived { get; set; }
 
@@ -42,7 +42,7 @@ namespace Findier.Api.Models
 
         public virtual User User { get; set; }
 
-        public virtual Finboard Finboard { get; set; }
+        public virtual Category Category { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 

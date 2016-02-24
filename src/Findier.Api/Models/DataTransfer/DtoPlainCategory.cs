@@ -1,8 +1,8 @@
 ﻿namespace Findier.Api.Models.DataTransfer
 {
-    public class DtoPlainFinboard
+    public class DtoPlainCategory
     {
-        public DtoPlainFinboard(string id, string title)
+        public DtoPlainCategory(string id, string title)
         {
             Id = id;
             Title = title;

@@ -35,8 +35,6 @@ namespace Findier.Api.Models.Identity
 
         #region Navigational Properties
 
-        public virtual ICollection<Finboard> Finboards { get; set; }
-
         public virtual ICollection<Post> Posts { get; set; }
 
         public virtual ICollection<PostVote> PostVotes { get; set; }
