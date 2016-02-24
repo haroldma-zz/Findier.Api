@@ -340,7 +340,7 @@ namespace Findier.Api.Controllers
 
             if (updatedPost.Email != null)
             {
-                if (!string.IsNullOrWhiteSpace(post.Email))
+                if (!string.IsNullOrWhiteSpace(updatedPost.Email))
                 {
                     post.Email = updatedPost.Email;
                 }
@@ -357,7 +357,7 @@ namespace Findier.Api.Controllers
 
             if (updatedPost.PhoneNumber != null)
             {
-                if (!string.IsNullOrWhiteSpace(post.PhoneNumber))
+                if (!string.IsNullOrWhiteSpace(updatedPost.PhoneNumber))
                 {
                     post.PhoneNumber = updatedPost.PhoneNumber;
                 }
