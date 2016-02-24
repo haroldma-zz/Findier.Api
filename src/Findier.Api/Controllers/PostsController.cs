@@ -31,6 +31,39 @@ namespace Findier.Api.Controllers
         }
 
         /// <summary>
+        ///     Deletes the specified post.
+        /// </summary>
+        /// <param name="id">The post id.</param>
+        /// <returns></returns>
+        [Route("{id}")]
+        [SwaggerResponse(HttpStatusCode.OK)]
+        [SwaggerResponse(HttpStatusCode.NotFound)]
+        [SwaggerResponse(HttpStatusCode.BadRequest, type: typeof (FindierErrorResponse))]
+        public async Task<IHttpActionResult> Delete(string id)
+        {
+            var decodedId = id.FromEncodedId();
+            var post = await _dbContext.Posts.FindAsync(decodedId);
+
+            if (post == null || post.DeletedAt != null)
+            {
+                return NotFound();
+            }
+
+            if (post.UserId != User.Id)
+            {
+                return ApiBadRequest("This post doesn't belong to you.");
+            }
+
+            post.Text = null;
+            post.PhoneNumber = null;
+            post.Email = null;
+            post.DeletedAt = DateTime.UtcNow;
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        /// <summary>
         ///     Deletes the user's post downvote.
         /// </summary>
         /// <param name="id">The post id.</param>

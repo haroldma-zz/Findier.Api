@@ -82,11 +82,14 @@ namespace Findier.Api.Controllers
 
             var max = await _dbContext.Entry(finboard)
                 .Collection(p => p.Posts)
-                .Query().CountAsync();
+                .Query()
+                .ExcludeDeleted()
+                .CountAsync();
 
             var posts = await _dbContext.Entry(finboard)
                 .Collection(p => p.Posts)
                 .Query()
+                .ExcludeDeleted()
                 .OrderByDescending(p => p.Id)
                 .Skip(offset)
                 .Take(limit)

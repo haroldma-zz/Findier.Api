@@ -204,10 +204,11 @@
     <Compile Include="Controllers\FinboardsController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Extensions\EntityExtensions.cs" />
     <Compile Include="Extensions\HashidsExtensions.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="Extensions\RequestExtensions.cs" />
-    <Compile Include="Extensions\IdentityExtensions.cs" />
+    <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\GeoHelper.cs" />
     <Compile Include="Infrastructure\AppAuthorizationServerProvider.cs" />
