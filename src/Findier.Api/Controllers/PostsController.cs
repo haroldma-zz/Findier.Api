@@ -162,8 +162,9 @@ namespace Findier.Api.Controllers
         }
 
         /// <summary>
-        ///     Gets a feed of posts from all categories.
+        /// Gets a feed of posts from all categories.
         /// </summary>
+        /// <param name="country">The country.</param>
         /// <param name="sort">The sort.</param>
         /// <param name="offset">The offset (paging).</param>
         /// <param name="limit">The limit (paging).</param>
@@ -171,7 +172,7 @@ namespace Findier.Api.Controllers
         [AllowAnonymous]
         [Route("")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof (FindierResponse<FindierPageData<DtoPost>>))]
-        public async Task<IHttpActionResult> GetPosts(PostSort sort = PostSort.New, int offset = 0, int limit = 20)
+        public async Task<IHttpActionResult> GetPosts(Country country, PostSort sort = PostSort.New, int offset = 0, int limit = 20)
         {
             offset = Math.Max(0, offset);
             limit = Math.Min(100, limit);
@@ -186,6 +187,7 @@ namespace Findier.Api.Controllers
                 // calculating hotness needs a bit of a more complex query
                 posts = await _dbContext.Posts
                     .ExcludeDeleted()
+                    .Where(p => p.Category.Country == country)
                     .OrderByHotness()
                     .Skip(offset)
                     .Take(limit)
@@ -202,6 +204,7 @@ namespace Findier.Api.Controllers
 
                 posts = await _dbContext.Posts
                     .ExcludeDeleted()
+                    .Where(p => p.Category.Country == country)
                     .OrderByDescending(sortClause)
                     .Skip(offset)
                     .Take(limit)
