@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Diagnostics;
 using Findier.Api.Infrastructure;
 using Findier.Api.Models.Identity;
 
@@ -10,6 +11,9 @@ namespace Findier.Api.Models
         {
             Configuration.LazyLoadingEnabled = false;
             Configuration.ProxyCreationEnabled = false;
+#if DEBUG
+            Database.Log += p => Debug.WriteLine(p);
+#endif
         }
 
         public DbSet<Category> Categories { get; set; }

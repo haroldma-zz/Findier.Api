@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -179,24 +181,53 @@ namespace Findier.Api.Controllers
                 .ExcludeDeleted()
                 .CountAsync();
 
-            Expression<Func<Post, int>> sortClause = p => p.Id;
-
-            switch (sort)
+            List<Post> posts;
+            if (sort == PostSort.Hot)
             {
-                case PostSort.Top:
-                    sortClause = p => p.Votes.Count(m => m.IsUp) - p.Votes.Count(m => !m.IsUp);
-                    break;
-                case PostSort.Hot:
-                    sortClause = p => p.Votes.Count(m => m.IsUp);
-                    break;
+                // calculating hotness needs a bit of a more complex query
+                var epochTime = new DateTime(1970, 1, 1);
+                posts = await _dbContext.Posts
+                    .ExcludeDeleted()
+                    .Select(p => new
+                    {
+                        Post = p,
+                        Score = p.Votes.Count(m => m.IsUp) - p.Votes.Count(m => !m.IsUp)
+                    })
+                    .Select(p => new
+                            {
+                                p.Post,
+                                Order = (double)(SqlFunctions.Log((double)Math.Abs(p.Score))/ SqlFunctions.Log(10f)),
+                                Sign = p.Score > 0 ? 1 : (p.Score < 0 ? -1 : 0),
+                                Seconds = (double)DbFunctions.DiffSeconds(epochTime, p.Post.CreatedAt) - 1456272000
+                    })
+                            .Select(p => new
+                            {
+                                p.Post,
+                                Hotness = Math.Round(p.Sign * p.Order + p.Seconds / 45000, 7),
+                                p.Seconds
+                            } )
+                    .OrderByDescending(p => p.Hotness)
+                    .Skip(offset)
+                    .Take(limit)
+                    .Select(p => p.Post)
+                    .ToListAsync();
             }
+            else
+            {
+                Expression<Func<Post, int>> sortClause = p => p.Id;
 
-            var posts = await _dbContext.Posts
-                .ExcludeDeleted()
-                .OrderByDescending(sortClause)
-                .Skip(offset)
-                .Take(limit)
-                .ToListAsync();
+                if (sort == PostSort.Top)
+                {
+                    sortClause = p => p.Votes.Count(m => m.IsUp) - p.Votes.Count(m => !m.IsUp);
+                }
+
+                posts = await _dbContext.Posts
+                    .ExcludeDeleted()
+                    .OrderByDescending(sortClause)
+                    .Skip(offset)
+                    .Take(limit)
+                    .ToListAsync();
+            }
 
             return OkPageData(await _dtoService.CreateListAsync<Post, DtoPlainPost>(posts), offset + limit < max);
         }
