@@ -212,6 +212,8 @@
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Enums\Language.cs" />
+    <Compile Include="Enums\PostSort.cs" />
     <Compile Include="Extensions\EntityExtensions.cs" />
     <Compile Include="Extensions\HashidsExtensions.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />

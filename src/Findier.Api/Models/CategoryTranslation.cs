@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Findier.Api.Enums;
 
 namespace Findier.Api.Models
 {

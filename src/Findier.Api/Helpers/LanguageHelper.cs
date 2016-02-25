@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using Findier.Api.Models;
+using Findier.Api.Enums;
 
 namespace Findier.Api.Helpers
 {

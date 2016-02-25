@@ -33,12 +33,4 @@ namespace Findier.Api.Models
 
         #endregion
     }
-
-    public enum Language
-    {
-        // ReSharper disable InconsistentNaming
-        en,
-        es
-        // ReSharper restore InconsistentNaming
-    }
 }

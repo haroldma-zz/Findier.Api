@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -64,7 +65,6 @@ namespace Findier.Api.Controllers
             return Ok();
         }
 
-       
         /// <summary>
         ///     Deletes the user's post downvote.
         /// </summary>
@@ -157,6 +157,48 @@ namespace Findier.Api.Controllers
                 .ToListAsync();
 
             return OkPageData(await _dtoService.CreateListAsync<Comment, DtoComment>(comments), offset + limit < max);
+        }
+
+        /// <summary>
+        ///     Gets a feed of posts from all categories.
+        /// </summary>
+        /// <param name="sort">The sort.</param>
+        /// <param name="offset">The offset (paging).</param>
+        /// <param name="limit">The limit (paging).</param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Route("")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof (FindierResponse<FindierPageData<DtoPlainPost>>))]
+        [SwaggerResponse(HttpStatusCode.NotFound)]
+        public async Task<IHttpActionResult> GetPosts(PostSort sort = PostSort.New, int offset = 0, int limit = 20)
+        {
+            offset = Math.Max(0, offset);
+            limit = Math.Min(100, limit);
+
+            var max = await _dbContext.Posts
+                .ExcludeDeleted()
+                .CountAsync();
+
+            Expression<Func<Post, int>> sortClause = p => p.Id;
+
+            switch (sort)
+            {
+                case PostSort.Top:
+                    sortClause = p => p.Votes.Count(m => m.IsUp) - p.Votes.Count(m => !m.IsUp);
+                    break;
+                case PostSort.Hot:
+                    sortClause = p => p.Votes.Count(m => m.IsUp);
+                    break;
+            }
+
+            var posts = await _dbContext.Posts
+                .ExcludeDeleted()
+                .OrderByDescending(sortClause)
+                .Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
+            return OkPageData(await _dtoService.CreateListAsync<Post, DtoPlainPost>(posts), offset + limit < max);
         }
 
         /// <summary>

@@ -61,7 +61,7 @@ namespace Findier.Api.Controllers
         }
 
         /// <summary>
-        ///     Gets a feed of posts of the specified categorie.
+        ///     Gets a feed of posts of the specified category.
         /// </summary>
         /// <param name="id">The categorie id.</param>
         /// <param name="offset">The offset (paging).</param>
@@ -77,7 +77,6 @@ namespace Findier.Api.Controllers
             limit = Math.Min(100, limit);
 
             var decodedId = id.FromEncodedId();
-
             var category = await _dbContext.Categories.FindAsync(decodedId);
 
             if (category == null)
