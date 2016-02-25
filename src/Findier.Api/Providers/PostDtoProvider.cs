@@ -61,7 +61,11 @@ namespace Findier.Api.Providers
                 username = entry.User.UserName;
             }
 
-            return new DtoPost(entry, username, ups, downs, new DtoPlainCategory(entry.CategoryId.ToEncodedId(), category));
+            return new DtoPost(entry,
+                username,
+                ups,
+                downs,
+                new DtoPlainCategory(entry.CategoryId.ToEncodedId(), category));
         }
     }
 }

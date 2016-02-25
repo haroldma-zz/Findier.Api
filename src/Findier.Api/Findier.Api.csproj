@@ -256,7 +256,6 @@
     <Compile Include="Models\DataTransfer\DtoComment.cs" />
     <Compile Include="Models\DataTransfer\DtoCategory.cs" />
     <Compile Include="Models\DataTransfer\DtoPlainCategory.cs" />
-    <Compile Include="Models\DataTransfer\DtoPlainPost.cs" />
     <Compile Include="Models\DataTransfer\DtoPost.cs" />
     <Compile Include="Responses\FindierPageData.cs" />
     <Compile Include="Responses\FindierErrorResponse.cs" />
@@ -275,7 +274,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\CommentDtoProvider.cs" />
     <Compile Include="Providers\CategoryDtoProvider.cs" />
-    <Compile Include="Providers\PlainPostDtoProvider.cs" />
     <Compile Include="Providers\PostDtoProvider.cs" />
     <Compile Include="Services\DtoService.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />

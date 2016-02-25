@@ -170,8 +170,7 @@ namespace Findier.Api.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [Route("")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof (FindierResponse<FindierPageData<DtoPlainPost>>))]
-        [SwaggerResponse(HttpStatusCode.NotFound)]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof (FindierResponse<FindierPageData<DtoPost>>))]
         public async Task<IHttpActionResult> GetPosts(PostSort sort = PostSort.New, int offset = 0, int limit = 20)
         {
             offset = Math.Max(0, offset);
@@ -185,31 +184,11 @@ namespace Findier.Api.Controllers
             if (sort == PostSort.Hot)
             {
                 // calculating hotness needs a bit of a more complex query
-                var epochTime = new DateTime(1970, 1, 1);
                 posts = await _dbContext.Posts
                     .ExcludeDeleted()
-                    .Select(p => new
-                    {
-                        Post = p,
-                        Score = p.Votes.Count(m => m.IsUp) - p.Votes.Count(m => !m.IsUp)
-                    })
-                    .Select(p => new
-                            {
-                                p.Post,
-                                Order = (double)(SqlFunctions.Log((double)Math.Abs(p.Score))/ SqlFunctions.Log(10f)),
-                                Sign = p.Score > 0 ? 1 : (p.Score < 0 ? -1 : 0),
-                                Seconds = (double)DbFunctions.DiffSeconds(epochTime, p.Post.CreatedAt) - 1456272000
-                    })
-                            .Select(p => new
-                            {
-                                p.Post,
-                                Hotness = Math.Round(p.Sign * p.Order + p.Seconds / 45000, 7),
-                                p.Seconds
-                            } )
-                    .OrderByDescending(p => p.Hotness)
+                    .OrderByHotness()
                     .Skip(offset)
                     .Take(limit)
-                    .Select(p => p.Post)
                     .ToListAsync();
             }
             else
@@ -229,7 +208,7 @@ namespace Findier.Api.Controllers
                     .ToListAsync();
             }
 
-            return OkPageData(await _dtoService.CreateListAsync<Post, DtoPlainPost>(posts), offset + limit < max);
+            return OkPageData(await _dtoService.CreateListAsync<Post, DtoPost>(posts), offset + limit < max);
         }
 
         /// <summary>

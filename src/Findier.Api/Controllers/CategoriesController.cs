@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -64,14 +65,19 @@ namespace Findier.Api.Controllers
         ///     Gets a feed of posts of the specified category.
         /// </summary>
         /// <param name="id">The categorie id.</param>
+        /// <param name="sort">The sort.</param>
         /// <param name="offset">The offset (paging).</param>
         /// <param name="limit">The limit (paging).</param>
         /// <returns></returns>
         [AllowAnonymous]
         [Route("{id}/posts")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof (FindierResponse<FindierPageData<DtoPlainPost>>))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof (FindierResponse<FindierPageData<DtoPost>>))]
         [SwaggerResponse(HttpStatusCode.NotFound)]
-        public async Task<IHttpActionResult> GetPosts(string id, int offset = 0, int limit = 20)
+        public async Task<IHttpActionResult> GetPosts(
+            string id,
+            PostSort sort = PostSort.New,
+            int offset = 0,
+            int limit = 20)
         {
             offset = Math.Max(0, offset);
             limit = Math.Min(100, limit);
@@ -90,16 +96,39 @@ namespace Findier.Api.Controllers
                 .ExcludeDeleted()
                 .CountAsync();
 
-            var posts = await _dbContext.Entry(category)
-                .Collection(p => p.Posts)
-                .Query()
-                .ExcludeDeleted()
-                .OrderByDescending(p => p.Id)
-                .Skip(offset)
-                .Take(limit)
-                .ToListAsync();
+            List<Post> posts;
+            if (sort == PostSort.Hot)
+            {
+                // calculating hotness needs a bit of a more complex query
+                posts = await _dbContext.Entry(category)
+                    .Collection(p => p.Posts)
+                    .Query()
+                    .ExcludeDeleted()
+                    .OrderByHotness()
+                    .Skip(offset)
+                    .Take(limit)
+                    .ToListAsync();
+            }
+            else
+            {
+                Expression<Func<Post, int>> sortClause = p => p.Id;
 
-            return OkPageData(await _dtoService.CreateListAsync<Post, DtoPlainPost>(posts), offset + limit < max);
+                if (sort == PostSort.Top)
+                {
+                    sortClause = p => p.Votes.Count(m => m.IsUp) - p.Votes.Count(m => !m.IsUp);
+                }
+
+                posts = await _dbContext.Entry(category)
+                    .Collection(p => p.Posts)
+                    .Query()
+                    .ExcludeDeleted()
+                    .OrderByDescending(sortClause)
+                    .Skip(offset)
+                    .Take(limit)
+                    .ToListAsync();
+            }
+
+            return OkPageData(await _dtoService.CreateListAsync<Post, DtoPost>(posts), offset + limit < max);
         }
     }
 }
